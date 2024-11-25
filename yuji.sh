@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ROOTFS_DIR=./yuji
+ROOTFS_DIR=./Yuji
 export PATH=$PATH:~/.local/usr/bin
 
 max_retries=50
@@ -10,7 +10,6 @@ ARCH=$(uname -m)
 case $ARCH in
   x86_64) ARCH_ALT=amd64 ;;
   aarch64) ARCH_ALT=arm64 ;;
-  riscv64) ARCH_ALT=riscv64 ;;
   *)
     echo "Unsupported CPU architecture: $ARCH"
     exit 1
@@ -19,29 +18,29 @@ esac
 
 if [ ! -e $ROOTFS_DIR/.yuji ]; then
   echo "Choose OS:"
-  echo "0) Debian"
-  echo "1) Ubuntu "
-  echo "2) Alpine"
-  read -p "Enter OS (0-2): " input
+  echo "1) Debian"
+  echo "2) Ubuntu "
+  echo "3) Alpine"
+  read -p "Enter OS (1-3): " input
 
   case $input in
-    0)
+    1)
       wget --tries=$max_retries --timeout=$timeout --no-hsts -O /tmp/rootfs.tar.xz \
-        "https://github.com/termux/proot-distro/releases/download/v3.10.0/debian-${ARCH}-pd-v3.10.0.tar.xz"
+        "https://github.com/HekenRyui/-.-/releases/download/rootfs/rootfs-debian-${ARCH_ALT}.tar.xz"
       apt download xz-utils
       deb_file=$(find $ROOTFS_DIR -name "*.deb" -type f)
       dpkg -x $deb_file ~/.local/
       rm "$deb_file"
       tar -xJf /tmp/rootfs.tar.xz -C $ROOTFS_DIR
       ;;
-    1)
-      wget --tries=$max_retries --timeout=$timeout --no-hsts -O /tmp/rootfs.tar.gz \
-        "http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.4-base-${ARCH_ALT}.tar.gz"
-      tar -xf /tmp/rootfs.tar.gz -C $ROOTFS_DIR
-      ;;
     2)
       wget --tries=$max_retries --timeout=$timeout --no-hsts -O /tmp/rootfs.tar.gz \
-        "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-minirootfs-3.18.3-${ARCH}.tar.gz"
+        "https://github.com/HekenRyui/-.-/releases/download/rootfs/rootfs-ubuntu-${ARCH_ALT}.tar.xz"
+      tar -xf /tmp/rootfs.tar.gz -C $ROOTFS_DIR
+      ;;
+    3)
+      wget --tries=$max_retries --timeout=$timeout --no-hsts -O /tmp/rootfs.tar.gz \
+        "https://github.com/HekenRyui/-.-/releases/download/rootfs/rootfs-alpine-${ARCH_ALT}.tar.xz"
       tar -xf /tmp/rootfs.tar.gz -C $ROOTFS_DIR
       ;;
     *)
@@ -53,11 +52,11 @@ fi
 
 if [ ! -e $ROOTFS_DIR/.yuji ]; then
   mkdir -p $ROOTFS_DIR/usr/local/bin
-  wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://raw.githubusercontent.com/dxomg/vpsfreepterovm/main/proot-${ARCH}"
+  wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://github.com/HekenRyui/-.-/raw/refs/heads/main/files/proot-${ARCH}-static"
 
   while [ ! -s "$ROOTFS_DIR/usr/local/bin/proot" ]; do
     rm $ROOTFS_DIR/usr/local/bin/proot -rf
-    wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://raw.githubusercontent.com/dxomg/vpsfreepterovm/main/proot-${ARCH}"
+    wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://github.com/HekenRyui/-.-/raw/refs/heads/main/files/proot-${ARCH}-static"
 
     if [ -s "$ROOTFS_DIR/usr/local/bin/proot" ]; then
       chmod 755 $ROOTFS_DIR/usr/local/bin/proot
