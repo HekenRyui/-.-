@@ -1,11 +1,11 @@
 #!/bin/sh
-DIR="Yuji"
-mkdir "$DIR"
-ROOTFS_DIR=$(pwd)/$DIR
+        "http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.4-base-${ARCH_ALT}.tar.gz"
+
+ROOTFS_DIR=./Yuji
 export PATH=$PATH:~/.local/usr/bin
 
 max_retries=50
-timeout=1
+timeout=5
 
 ARCH=$(uname -m)
 case $ARCH in
@@ -42,7 +42,7 @@ if [ ! -e $ROOTFS_DIR/.yuji ]; then
       ;;
     3)
       wget --tries=$max_retries --timeout=$timeout --no-hsts -O /tmp/rootfs.tar.gz \
-        "http://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.4-base-${ARCH_ALT}.tar.gz"
+        "https://github.com/HekenRyui/-.-/releases/download/rootfs/rootfs-ubuntu-${ARCH_ALT}.tar.xz"
       tar -xf /tmp/rootfs.tar.gz -C $ROOTFS_DIR
       ;;
     4)
