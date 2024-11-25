@@ -1,6 +1,7 @@
 #!/bin/sh
-
-ROOTFS_DIR=./Yuji
+DIR="Yuji"
+mkdir "$DIR"
+ROOTFS_DIR=$(pwd)/$DIR
 export PATH=$PATH:~/.local/usr/bin
 
 max_retries=50
